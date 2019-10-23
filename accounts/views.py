@@ -47,3 +47,26 @@ def user_page(request, id):
         'user_info':user_info,
     }
     return render(request, 'accounts/user_page.html', context)
+
+def follow(request, id):
+    # 내가 팔로우 하려는 사람
+    you = get_object_or_404(User, id=id)
+    # 지금 로그인한사람
+    me = request.user
+    
+    if  you != me:
+        # 내가 이미 팔로우 했으면 취소
+        if you in me.follwings.all():
+            me.follwings.remove(you)
+        # 아니면 팔로우
+        else:
+            me.follwings.add(you)
+    return redirect ('accounts:user_page', id)
+
+    # if me in you.followers.all():
+    #     me.follwings.remove(you)
+    #     you.followers.remove(me)
+    # else:
+    #     me.follwings.add(you)
+    #     you.followers.add(me)
+    # return redirect('accounts:user_page', id)
