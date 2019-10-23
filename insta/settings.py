@@ -120,3 +120,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# 생성. accounts.User로 설정(원래 모델의 기본설정 : auth.User 인데 덮어씌워진다)
+AUTH_USER_MODEL = 'accounts.User'
