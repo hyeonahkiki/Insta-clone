@@ -31,14 +31,22 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'accounts',
     'posts',
+    'imagekit',
+    'bootstrap4',
+    'bootstrap_pagination',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth.socialaccount.providers.kakao',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +130,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # 생성. accounts.User로 설정(원래 모델의 기본설정 : auth.User 인데 덮어씌워진다)
 AUTH_USER_MODEL = 'accounts.User'
+
+#미디어 url정보를 여기에도 작성해줘야한다
+MEDIA_URL = '/media/' # 외부에서 사용자가 사진에 접근을 가능하게 하는 것
+MEDIA_ROOT = os.path.join(BASE_DIR) # 내부에서 파일을 직접 찾는 것
+
+AUTHENTICATION_BACKENDS = (
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+)
+SITE_ID = 1
+# LOGIN_REDIRECT_URL = 'posts:index'

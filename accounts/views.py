@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login as auth_login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm,PasswordChangeForm
+from django.contrib.auth import login as auth_login, update_session_auth_hash
 from django.contrib.auth import logout as auth_logout
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User
 
 # UserCreationForm => ModelForm을 상속받기 때문에 model을 알아야함
@@ -70,3 +70,48 @@ def follow(request, id):
     #     me.follwings.add(you)
     #     you.followers.add(me)
     # return redirect('accounts:user_page', id)
+
+def delete(request, id):
+    # 내가 보고있는 페이지의 유저
+    # 확인하는 절차
+    user_info = get_object_or_404(User, id=id)
+    user = request.user
+
+    if user == user_info:
+        user.delete()
+    return redirect('posts:index')
+
+def update(request):
+    if request.method =='POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('posts:index')
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    context = {
+        'form':form,
+    }
+    return render(request, 'accounts/form.html', context)
+
+def password(request):
+    if request.method =='POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            # 비밀번호바꾸면 로그아웃됨(위에 코드를 안쓰면)
+            return redirect('posts:index')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        'form':form,
+    }
+    return render(request, 'accounts/form.html', context)
+
+def profile(request):
+    user_info = request.user
+    context = {
+        'user_info':user_info,
+    }
+    return render(request, 'accounts/user_page.html', context)

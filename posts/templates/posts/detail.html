@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="my-5">
+  <form action="{% url 'posts:comment_create' post.id %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit">
+  </form>
+</div>
+  {% for comment in post.comment_set.all %}
+    {{comment.content}} <a href="{% url 'posts:comment_delete' post.id comment.id %}">삭제</a>
+    <hr>
+  {% endfor %}
+{% endblock %}

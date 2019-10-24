@@ -15,9 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from posts import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # 우선순위는 먼저 넣은것 부터 된다.(우리가 만든거 쓰고 나머지 정보만 가져올거라서
+    # 순서를 이렇게 배치)
     path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
     path('posts/', include('posts.urls')),
+    path('', views.index)
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

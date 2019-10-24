@@ -1,0 +1,24 @@
+{% load make_link %}
+
+
+<div class="card d-inline-block mr-3" >
+  <img src="{{post.image.url}}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <h5 class="card-title">작성자 : {{post.user}}</h5>
+      {% if user == post.user %}
+        <a href="{% url 'posts:delete' post.id %}">🗑️</a>
+      {% endif %}
+    </div>
+    
+    <p class="card-text">{{post|hashtag_link|safe}}</p>
+    {% if user in post.like_users.all %}
+    <a href="{% url 'posts:like' post.id %}" class="btn btn-primary">😍</a>
+    {% else %}
+    <a href="{% url 'posts:like' post.id %}" class="btn btn-primary">❤️</a>
+    {% endif %}
+    <a class="btn btn-warning">{{post.like_users.count}}</a>
+    <a href="{% url 'posts:comment_create' post.id %}" class="btn btn-secondary">댓글달기</a>
+    <a href="{% url 'posts:update' post.id %}" class="btn btn-info">수정하기</a>
+  </div>
+</div>
